@@ -7,6 +7,14 @@ import { db } from '@/lib/db';
 
 export async function POST(req: NextRequest) {
   try {
+    // Check if Stripe is configured
+    if (!stripe || !PRICE_ID) {
+      return NextResponse.json(
+        { error: 'Stripe is not configured. Please contact support.' },
+        { status: 503 }
+      );
+    }
+
     const session = await getServerSession(authOptions);
 
     if (!session?.user?.email) {
